@@ -1,0 +1,56 @@
+%% LaTeX header file (without altering default Pandoc template)
+%% Time-stamp: <2018-02-14 15:18:22 chl>
+
+\usecolortheme[named=black]{structure}
+\usepackage[font={color=DarkSlateGrey,small}]{caption}
+\usepackage{icomma}
+\usepackage{wasysym}
+\usepackage{textcomp}
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+\usepackage{ragged2e}
+\justifying
+
+\makeatletter
+\setbeamertemplate{title page}[default][left,colsep=-4bp]
+\def\verbatim@nolig@list{}
+\makeatother
+
+\setbeamercolor{frametitle}{bg=SlateGrey,fg=White}
+\setbeamercolor{alerted text}{fg=SandyBrown}
+\setbeamerfont{alerted text}{series=\bfseries}
+\setbeamerfont{quote}{shape=\upshape,family=\sffamily}
+\addtobeamertemplate{block begin}{}{\justifying}
+\captionsetup[figure]{labelformat=empty}
+\captionsetup[table]{labelformat=empty}
+\captionsetup[lstlisting]{labelformat=empty}
+
+\renewcommand{\textbf}{\alert}
+\definecolor{high}{named}{Coral}
+\definecolor{low}{named}{OliveDrab}
+
+\lstset{
+  basicstyle=\small\ttfamily,
+  commentstyle=\color{DarkSlateGrey},
+  numbers=left,
+  stepnumber=1,
+  numbersep=8pt,
+  numberfirstline=true,
+  firstnumber=1,
+  numberstyle=\color{LightSlateGrey}\footnotesize{},
+  captionpos=t,
+  abovecaptionskip=3ex,
+  aboveskip=20pt,
+  % literate={<-}{\texttt{<-}}{1},
+  escapeinside={(*@}{@*)}
+}
+
+\newcommand{\goto}[1]{\quad\hyperlink{#1}{\beamerbutton{Détails}}}
+\renewcommand{\footnoterule}{%
+  \kern -3pt
+  {\color{LightSlateGrey}\hrule width \textwidth height .25pt}
+  \kern 2.5pt
+}
+\renewcommand{\footnotesize}{\scriptsize}
+
+

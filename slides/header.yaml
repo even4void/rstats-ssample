@@ -1,0 +1,20 @@
+---
+mainfont: Fira Sans
+sansfont: Fira Sans Condensed
+monofont: Fira Code
+monofontoptions: [Scale = 0.8, Numbers = Lining, BoldFont = Fira Code Medium, Contextuals = Alternate]
+mainfontoptions: [Numbers = Tabular, BoldFont = Fira Sans Medium]
+fontsize: 11pt
+classoption: svgnames
+titlegraphic: ""
+lang: fr-FR
+citecolor: DarkSlateGrey
+urlcolor:  SlateGrey
+linkcolor: SlateGrey
+link-citations: true
+bibliography: /Users/chl/Documents/Papers/references.bib
+csl: apa-fr-provost.csl
+header-includes:
+    - \graphicspath{{../assets/}}
+    - \input{macros}
+---
