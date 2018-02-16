@@ -1,10 +1,12 @@
 %% LaTeX header file (without altering default Pandoc template)
-%% Time-stamp: <2018-02-16 18:41:38 chl>
+%% Time-stamp: <2018-02-16 19:48:58 chl>
 
 \usecolortheme[named=black]{structure}
 \usepackage[font={color=DarkSlateGrey,small}]{caption}
 \usepackage{icomma}
-\usepackage{wasysym}
+%\usepackage{wasysym}
+\usepackage{manfnt}
+\usepackage{array}
 \usepackage{tcolorbox}
 \usepackage{textcomp}
 \usepackage{csquotes}
@@ -61,4 +63,12 @@
 }
 \renewcommand{\footnotesize}{\scriptsize}
 
+% https://tex.stackexchange.com/a/312302
+\newcommand{\dnote}[1]{%
+    \noindent
+    \begin{tabular}{@{}m{0.13\textwidth}@{}m{0.87\textwidth}@{}}%
+        \large\textdbend &#1%
+    \end{tabular}%
+    \par
+}
 
