@@ -1,5 +1,5 @@
 %% LaTeX header file (without altering default Pandoc template)
-%% Time-stamp: <2018-02-14 15:18:22 chl>
+%% Time-stamp: <2018-02-16 16:14:29 chl>
 
 \usecolortheme[named=black]{structure}
 \usepackage[font={color=DarkSlateGrey,small}]{caption}
@@ -20,14 +20,15 @@
 \setbeamercolor{alerted text}{fg=SandyBrown}
 \setbeamerfont{alerted text}{series=\bfseries}
 \setbeamerfont{quote}{shape=\upshape,family=\sffamily}
-\addtobeamertemplate{block begin}{}{\justifying}
+\setbeamertemplate{itemize items}{\scalebox{1.4}{\raisebox{-.25ex}{\text{\textbullet}}}}
+\addtobeamertemplate{block begin}{}{\justifying\small}
 \captionsetup[figure]{labelformat=empty}
 \captionsetup[table]{labelformat=empty}
 \captionsetup[lstlisting]{labelformat=empty}
 
 \renewcommand{\textbf}{\alert}
-\definecolor{high}{named}{Coral}
 \definecolor{low}{named}{OliveDrab}
+\definecolor{high}{named}{SteelBlue}
 
 \lstset{
   basicstyle=\small\ttfamily,
