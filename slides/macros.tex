@@ -1,10 +1,11 @@
 %% LaTeX header file (without altering default Pandoc template)
-%% Time-stamp: <2018-02-16 16:14:29 chl>
+%% Time-stamp: <2018-02-16 18:41:38 chl>
 
 \usecolortheme[named=black]{structure}
 \usepackage[font={color=DarkSlateGrey,small}]{caption}
 \usepackage{icomma}
 \usepackage{wasysym}
+\usepackage{tcolorbox}
 \usepackage{textcomp}
 \usepackage{csquotes}
 \MakeOuterQuote{"}
@@ -13,7 +14,7 @@
 
 \makeatletter
 \setbeamertemplate{title page}[default][left,colsep=-4bp]
-\def\verbatim@nolig@list{}
+\def\verbatim@nolig@list{}  % so that <-'s ligature is handled correctly with Fira Code
 \makeatother
 
 \setbeamercolor{frametitle}{bg=SlateGrey,fg=White}
@@ -21,14 +22,20 @@
 \setbeamerfont{alerted text}{series=\bfseries}
 \setbeamerfont{quote}{shape=\upshape,family=\sffamily}
 \setbeamertemplate{itemize items}{\scalebox{1.4}{\raisebox{-.25ex}{\text{\textbullet}}}}
-\addtobeamertemplate{block begin}{}{\justifying\small}
+\addtobeamertemplate{block begin}{}{\justifying\small\sffamily}
 \captionsetup[figure]{labelformat=empty}
 \captionsetup[table]{labelformat=empty}
 \captionsetup[lstlisting]{labelformat=empty}
 
 \renewcommand{\textbf}{\alert}
-\definecolor{low}{named}{OliveDrab}
-\definecolor{high}{named}{SteelBlue}
+\definecolor{low}{named}{FireBrick}
+\definecolor{high}{named}{RoyalBlue}
+\newtcbox{\texthigh}{nobeforeafter,colframe=high!15!white,colback=high!5!white,boxrule=0.5pt,arc=4pt,
+  boxsep=0pt,left=2pt,right=2pt,top=2pt,bottom=2pt,tcbox raise base}
+\newtcbox{\textlow}{nobeforeafter,colframe=low!15!white,colback=low!5!white,boxrule=0.5pt,arc=4pt,
+  boxsep=0pt,left=2pt,right=2pt,top=2pt,bottom=2pt,tcbox raise base}
+\newcommand{\mathhigh}[1]{\textcolor{high}{#1}}
+\newcommand{\mathlow}[1]{\textcolor{low}{#1}}
 
 \lstset{
   basicstyle=\small\ttfamily,
