@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
 
 ##
-## Time-stamp: <2018-02-16 19:50:23 chl>
+## Time-stamp: <2018-02-17 18:11:54 chl>
 ## Figures that go along ssample.md slides.
 ##
 
@@ -12,6 +12,8 @@ library(hrbrthemes)
 library(directlabels)
 
 set.seed(101)
+
+WD <- "../data"
 
 psave <- function(filename = NULL, plot = last_plot(), w = 5, h = w * 2/(1+sqrt(5)), r = 300, ...) {
   p = plot + theme(axis.title.x = element_text(hjust = 1),
@@ -75,3 +77,17 @@ p = ggplot(data = d, aes(x, y)) +
 
 psave("fig-twosample.png")
 
+## Fig #4
+tmp = read.table(paste(WD, "weight.dat", sep = "/"))
+
+d = data.frame(weight = as.numeric(unlist(tmp)),
+               type = gl(2, 20, labels = c("Beef", "Cereal")),
+               level = gl(2, 10, labels = c("Low", "High")))
+
+p = ggplot(data = d, aes(x = level, y = weight)) +
+  geom_boxplot(position = position_dodge()) +
+  geom_jitter(size = .8, width = .05) +
+  facet_wrap(~ type, nrow = 2) +
+  labs(x = NULL, y = "Rat weight (g)")
+
+psave("fig-ratweight.png", w = 3, h = 4.5)
