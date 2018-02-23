@@ -135,7 +135,62 @@ mean of x mean of y
      79.2     100.0
 ```
 
-        
+## Alternatives
+
+1. Approche non paramétrique 
+2. Test de nullité du paramètre par permutation
+3. Estimation par intervalle par bootstrap
+4. Estimation bayésienne d'un intervalle crédible de confiance
+
+
+## Approche non paramétrique
+
+### Le test des rangs de (Mann-Whitney-)Wilcoxon
+
+L'hypothèse nulle est que les deux échantillons comparés proviennent de deux distributions ayant les mêmes distributions (paramètre de position, i.e. médiane).
+
+La statistique de test est construite comme la plus petite somme des rangs d'un des deux échantillons ; quand $n_1,n_2>15$ et qu'il n'y a pas d'ex-aequo, on a l'approximation suivante pour La statistique de test : 
+
+$$ Z=\frac{S-n_1(n_1+n_2+1)/2}{\sqrt{n_1n_2(n_1+n_2+1)/12}}\sim \mathcal{N}(0;1),$$ 
+
+où $S$ est la statistique de test pour l'échantillon avec $n_1$ observations.
+
+Pour deux échantillons appariés, le test des rangs signés est utilisé : on calcule la somme $T^+$ des rangs des différences $z_i=x_{1i}-x_{2i}$ en valeurs absolues positifs ; dans le cadre asymptotique, la statistique de test correspondante est : 
+
+$$ Z=\frac{T^+-n(n+1)/4}{\sqrt{n(n+1)(2n+1)/24}}\sim\mathcal{N}(0;1). $$
+
+
+
+## Bootstrap 
+<!-- FIXME: must distinguish estimaiton of standard error, confidence interval, and hypothesis testing -->
+
+Conditions de validité : (a) le paramètre à estimer n'est pas dans un cas limite (borne de l'espace du paramètre, cas des statistiques d'ordre ou des proportions extrêmes) ; (b) l'échantillon peut être considéré représentatif de la population cible ; (c) la taille de l'échantillon est raisonnable.
+
+1. Tirage avec remise de $n$ échantillons de même taille $k$ ($k$, la taille de l'échantillon d'origine).[^2]
+2. Pour chaque échantillon bootstrap, on calcule la statistique d'intérêt, $\hat\theta_i^*$.
+3. Le biais par rapport à l'estimateur classique est $\hat\theta - \theta \approx \mathbb E(\hat\theta^*) - \hat\theta$.
+4. Pour chaque échantillon bootstrap, on calcule $t_i^*=\tfrac{\hat\theta_i^* - \hat\theta}{\text{se}(\hat\theta_i^*)}$ ($\text{se}(\hat\theta_i^*) = s_i^*\sqrt{n}^{-1}$), et la distribution bootstrap de $t^*$ permet de construire un intervalle de confiance à 95 %.
+
+[^2]: Illustration : [Bootstrap in Picture][drbunsen]
+
+
+## Illustration
+
+Dans le cas à deux échantillons, on rééchantillonne séparément les deux groupes (centrés sur leur moyennes respectives), on construit la statistique de test d'intérêt (ici, $s = \bar x_1^* - \bar x_2^*$) et on calcule le degré de signification achevé $\sharp \{|s| > |\bar x_1 - \bar x_2|\}$ (\texthigh{sous $H_0$}) :
+
+```{.r .number-lines}
+x1 <- d[,1] - (*@\texthigh{mean(d[,1]) + mean(x)}@*) 
+x2 <- d[,2] - mean(d[,2]) + mean(x)
+B <- 10000        ## no. bootstrap samples
+s <- numeric(B)   ## vector of test statistics
+for (i in 1:B) {
+  x1s <- sample(x1, replace=TRUE)
+  x2s <- sample(x2, replace=TRUE)
+  s[i] <- mean(x1s) - mean(x2s)
+}
+pobs <-  (1 + sum(abs(s) > abs(mean(d[,1]) - mean(d[,2])))) / (B+1)
+```
+
 ## Références
 \setlength{\parindent}{-0.16in}
 \setlength{\leftskip}{0.2in}
@@ -147,3 +202,4 @@ mean of x mean of y
 
 [HSDS]: https://www.stat.ncsu.edu/research/sas/sicl/data/
 [HSDS-WG]: https://www.stat.ncsu.edu/research/sas/sicl/data/weight.dat
+[drbunsen]: http://www.drbunsen.org/bootstrap-in-picture/
