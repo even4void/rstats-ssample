@@ -1,0 +1,21 @@
+---
+mainfont: Fira Sans
+sansfont: Fira Sans Condensed
+monofont: Fira Code
+mathfont: STIX Two Math
+monofontoptions: [Scale = 0.8, Numbers = Lining, BoldFont = Fira Code Medium, Contextuals = Alternate]
+mainfontoptions: [Numbers = Tabular, BoldFont = Fira Sans Medium]
+mathfontoptions: [Scale = MatchLowercase]
+fontsize: 9pt
+geometry: [margin = 0.25in]
+linestretch: 1
+classoption: [svgnames, twocolumn]
+lang: fr-FR
+citecolor: DarkSlateGrey
+urlcolor:  SlateGrey
+linkcolor: SlateGrey
+link-citations: true
+header-includes:
+    - \graphicspath{{../assets/}}
+    - \input{macros}
+---

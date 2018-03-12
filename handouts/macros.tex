@@ -1,0 +1,30 @@
+%% LaTeX header file (for use with custom handout template)
+%% Time-stamp: <2018-03-12 12:04:30 chl>
+
+\graphicspath{{../assets/}}
+
+\usepackage{wrapfig}
+
+\renewcommand{\baselinestretch}{1}
+\usepackage[font={color=DarkSlateGrey,small}]{caption}
+\captionsetup[lstlisting]{labelformat=empty}
+
+\lstset{
+  basicstyle=\small\ttfamily,
+  commentstyle=\color{DarkSlateGrey},
+  numbers=left,
+  stepnumber=1,
+  numbersep=8pt,
+  numberfirstline=true,
+  firstnumber=1,
+  numberstyle=\color{LightSlateGrey}\footnotesize{},
+  captionpos=t,
+  abovecaptionskip=3ex,
+  aboveskip=5pt,
+  % literate={<-}{\texttt{<-}}{1},
+  escapeinside={(*@}{@*)},
+  emph={str, head},
+  emphstyle=\bfseries
+}
+
+
