@@ -1,13 +1,24 @@
 %% LaTeX header file (for use with custom handout template)
-%% Time-stamp: <2018-03-12 12:04:30 chl>
+%% Time-stamp: <2018-03-12 22:46:22 chl>
 
 \graphicspath{{../assets/}}
 
-\usepackage{wrapfig}
-
+\usepackage[a4paper, left=1cm, right=7cm, top=1cm, bottom=1cm, marginparwidth=6cm]{geometry}
+\usepackage{sidenotes}
+\usepackage{sectsty}
+\subsectionfont{\color{DarkSlateGrey}}
 \renewcommand{\baselinestretch}{1}
-\usepackage[font={color=DarkSlateGrey,small}]{caption}
-\captionsetup[lstlisting]{labelformat=empty}
+\usepackage[justification=justified, singlelinecheck=false]{caption}
+
+\DeclareCaptionFont{white}{\color{white}} 
+\DeclareCaptionFormat{listing}{% 
+  \hspace*{-0.4pt}\colorbox{LightSlateGrey}{\parbox{\dimexpr0.8\textwidth\relax}{#1#2#3}}} 
+\captionsetup[lstlisting]{labelformat=empty,format=listing,labelfont=white,textfont=white}
+
+\renewenvironment{figure}[1][width=\marginparwidth]
+  {\begin{marginfigure}}
+  {\end{marginfigure}}
+
 
 \lstset{
   basicstyle=\small\ttfamily,

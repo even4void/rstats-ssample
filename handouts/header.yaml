@@ -7,9 +7,8 @@ monofontoptions: [Scale = 0.8, Numbers = Lining, BoldFont = Fira Code Medium, Co
 mainfontoptions: [Numbers = Tabular, BoldFont = Fira Sans Medium]
 mathfontoptions: [Scale = MatchLowercase]
 fontsize: 9pt
-geometry: [margin = 0.25in]
 linestretch: 1
-classoption: [svgnames, twocolumn]
+classoption: [svgnames]
 lang: fr-FR
 citecolor: DarkSlateGrey
 urlcolor:  SlateGrey
