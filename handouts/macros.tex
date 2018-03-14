@@ -1,29 +1,35 @@
 %% LaTeX header file (for use with custom handout template)
-%% Time-stamp: <2018-03-12 22:46:22 chl>
+%% Time-stamp: <2018-03-14 23:19:50 chl>
 
 \graphicspath{{../assets/}}
 
-\usepackage[a4paper, left=1cm, right=7cm, top=1cm, bottom=1cm, marginparwidth=6cm]{geometry}
+\usepackage[a4paper, left=1cm, right=8cm, top=1cm, bottom=1cm, marginparwidth=6.5cm]{geometry}
 \usepackage{sidenotes}
 \usepackage{sectsty}
 \subsectionfont{\color{DarkSlateGrey}}
+\usepackage{titlesec}
+\titlespacing{\section}{0pt}{\parskip}{-\parskip}
+\titlespacing{\subsection}{0pt}{\parskip}{-\parskip}
 \renewcommand{\baselinestretch}{1}
 \usepackage[justification=justified, singlelinecheck=false]{caption}
 
 \DeclareCaptionFont{white}{\color{white}} 
-\DeclareCaptionFormat{listing}{% 
-  \hspace*{-0.4pt}\colorbox{LightSlateGrey}{\parbox{\dimexpr0.8\textwidth\relax}{#1#2#3}}} 
+\DeclareCaptionFormat{listing}{\hspace*{-3.5pt}%
+  \parbox{\textwidth}{\colorbox{LightSlateGrey}{\parbox{\dimexpr\textwidth+1pt}{#1#2#3}}\vskip2.8pt}}
 \captionsetup[lstlisting]{labelformat=empty,format=listing,labelfont=white,textfont=white}
 
 \renewenvironment{figure}[1][width=\marginparwidth]
   {\begin{marginfigure}}
   {\end{marginfigure}}
 
+\renewcommand{\footnote}[1]{\let\thesidenote\relax\sidenotetext{#1}}
+
+
 
 \lstset{
   basicstyle=\small\ttfamily,
   commentstyle=\color{DarkSlateGrey},
-  numbers=left,
+  % numbers=left,
   stepnumber=1,
   numbersep=8pt,
   numberfirstline=true,
@@ -32,10 +38,14 @@
   captionpos=t,
   abovecaptionskip=3ex,
   aboveskip=5pt,
+  frame = single,
+  rulecolor = \color{LightSlateGrey},
   % literate={<-}{\texttt{<-}}{1},
   escapeinside={(*@}{@*)},
+  showstringspaces=false,
   emph={str, head},
-  emphstyle=\bfseries
+  emphstyle=\bfseries,
+  deletekeywords={na,labels}
 }
 
-
+\pagenumbering{gobble}
