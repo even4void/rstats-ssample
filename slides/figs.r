@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
 
 ##
-## Time-stamp: <2018-02-17 18:11:54 chl>
+## Time-stamp: <2018-03-16 15:29:23 chl>
 ## Figures that go along ssample.md slides.
 ##
 
@@ -91,3 +91,61 @@ p = ggplot(data = d, aes(x = level, y = weight)) +
   labs(x = NULL, y = "Rat weight (g)")
 
 psave("fig-ratweight.png", w = 3, h = 4.5)
+
+## Fig #5
+phosphate = read.csv("../data/phosphate.csv")
+d = subset(phosphate, group == "obese")
+
+p = ggplot(data = phosphate, aes(x = t0, y = t5)) +
+  geom_point(col = grey(.5)) +
+  geom_smooth(method = "loess", span = 1, se = FALSE, col = clr6[1]) +
+  facet_wrap(~ group, nrow = 2) +
+  labs(x = "Baseline (T0)", y = "Baseline + 5 hours (T5)")
+
+psave("fig-phosphate-1.png", w = 3, h = 4.5)
+
+## Fig #7
+m = lm(t5 ~ t0, data = d)
+yhat = fitted(m)
+
+p = ggplot(data = d, aes(x = t0, y = t5)) +
+  geom_point(col = grey(.5)) +
+  geom_smooth(method = "lm", se = FALSE, col = clr6[1]) +
+  geom_segment(aes(x = t0, xend = t0, y = t5, yend = yhat), color = grey(.5)) +
+  labs(x = "Baseline (T0)", y = "Baseline + 5 hours (T5)", caption = "Obese") +
+  annotate(geom = "text", x = 4.8, y = 4.9, label = "23", size = 2.8, col = clr6[5]) +
+  annotate(geom = "text", x = 5.2, y = 4.9, label = "27", size = 2.8, col = clr6[5])
+
+psave("fig-phosphate-2.png")
+
+
+## Fig #7
+p = ggplot(data = d, aes(x = t0, y = t5)) +
+  geom_point(col = grey(.5)) +
+  geom_smooth(method = "lm", se = FALSE, col = clr6[1]) +
+  geom_smooth(method = "rlm", se = FALSE, col = clr6[5]) +
+  labs(x = "Baseline (T0)", y = "Baseline + 5 hours (T5)") +
+  annotate(geom = "text", x = 6.25, y = 4.375, label = "RLM", size = 2.8, col = clr6[5]) +
+  annotate(geom = "text", x = 5.75, y = 4.625, label = "LM", size = 2.8, col = clr6[1])
+
+psave("fig-phosphate-3.png")
+
+
+
+## Fig #8
+fat = data.frame(fecfat = c(44.5, 33, 19.1, 9.4, 71.3, 51.2,
+                            7.3, 21, 5, 4.6, 23.3, 38,
+                            3.4, 23.1, 11.8, 4.6, 25.6, 36,
+                            12.4, 25.4, 22, 5.8, 68.2, 52.6),
+                 pilltype = gl(4, 6, labels = c("None", "Tablet", "Capsule", "Coated")),
+                 subject = gl(6, 1))
+
+fat.mean = aggregate(fecfat ~ pilltype, data = fat, mean)
+
+p = ggplot(data = fat, aes(x = reorder(pilltype, fecfat), y = fecfat)) +
+  geom_line(aes(group = subject), color = grey(0.5)) +
+  geom_line(data = fat.mean, aes(x = pilltype, y = fecfat, group = 1),
+            color = clr6[1], size = 1.2) +
+  labs(x = NULL, y = "Fecal fat")
+
+psave("fig-pill.png")
