@@ -278,8 +278,8 @@ d <- subset(tmp, group == "obese")
 ```{.r .number-lines}
 m <- lm(t5 ~ t0, data = d)
 cooks.distance(m)
-rob <- MASS::rlm(t5 ~ t0, data = d)    ## Huber M-estimator
-rob$w[c(3,7)]                     ## weights for obs. 23/27
+rob <- MASS::rlm(t5 ~ t0, data = d)  ## Huber M-estimator
+rob$w[c(3,7)]                        ## weights for obs. 23/27
 ```
 
 ```{caption="Mesures d'influence `influence.measure(m)`"}
@@ -291,7 +291,6 @@ rob$w[c(3,7)]                     ## weights for obs. 23/27
 25  0.02863 -0.0191  0.0599 1.313 0.00197 0.0856
 26 -0.01154  0.0337  0.1289 1.271 0.00898 0.0826
 27 -0.18166  0.2811  0.6159 0.733 (*@\texthigh{0.15426}@*) 0.0972
-28 -0.00481 -0.0269 -0.1822 1.217 0.01758 0.0786
 ...
 ```
 
@@ -315,7 +314,7 @@ où $\beta_0$ représente l'intercept et $\beta_1$ et $\beta_2$ les coefficients
 
 ![](linmod.png)
 
-## Analyse de covariace
+## Analyse de covariance
 
 L'analyse de covariance consiste à tester différents niveaux d'un facteur en présence d'un ou plusieurs co-facteurs continus. La variable réponse et ces co-facteurs sont supposées reliés, et l'objectif est d'obtenir une estimation des réponses corrigée pour les éventuelles différences entre groupes (au niveau des cofacteurs). 
 
@@ -323,9 +322,9 @@ Ce type d'analyse est fréquemment utilisé comme méthode d'ajustement *a poste
 
 Il existe également des alternatives non-paramétriques [@young-1995-nonpar-analy-covar].
 
-## 
+## Formalisation du modèle d'ANCOVA
 
-### Formalisation du modèle d'ANCOVA
+### Équation de la droite de régression
 
 Soit $y_{ij}$ la $j$ème observation dans le groupe $i$. À l'image du modèle d'ANOVA à un facteur, le modèle d'ANCOVA s'écrit :
 $$ y_{ij} = \mu+\alpha_i+\beta(x_{ij}-\bar x)+\varepsilon_{ij},$$ 
@@ -403,13 +402,12 @@ Comme $\mu$ et $\text{pilltype}$ sont fixés, et $\varepsilon_{ij} \perp \text{s
 Les composantes de variance découlent de l'égalité $\text{Var}(y_{ij})=\text{Var}(\text{subject}_i)+\text{Var}(\varepsilon_{ij})=\sigma_{s}^2+\sigma_{\varepsilon}^2$, supposée valide pour toutes les observations. On a donc : $\mathhigh{\text{Cor}(y_{ij},y_{ik})}=\frac{\sigma_{s}^2}{\sigma_{s}^2+\sigma_{\varepsilon}^2}$, qui représente la proportion de variance attribuable aux sujets, et qu'on appelle également \texthigh{corrélation intraclasse} ($\rho$).
 
 ## Références {.allowframebreaks}
+\vskip1em
 \setlength{\parindent}{-0.16in}
 \setlength{\leftskip}{0.2in}
-\setlength{\parskip}{8pt}
-\vspace*{-0.2in}
+\setlength{\parskip}{4pt}
 \noindent
 \small\sffamily
-
 
 [HSDS]: https://www.stat.ncsu.edu/research/sas/sicl/data/
 [HSDS-WG]: https://www.stat.ncsu.edu/research/sas/sicl/data/weight.dat
