@@ -1,5 +1,5 @@
 %% LaTeX header file (without altering default Pandoc template)
-%% Time-stamp: <2018-03-16 14:34:29 chl>
+%% Time-stamp: <2018-03-17 08:50:01 chl>
 
 \usecolortheme[named=black]{structure}
 \usepackage[font={color=DarkSlateGrey,small}]{caption}
@@ -38,6 +38,7 @@
   boxsep=0pt,left=2pt,right=2pt,top=2pt,bottom=2pt,tcbox raise base}
 \newcommand{\mathhigh}[1]{\textcolor{high}{#1}}
 \newcommand{\mathlow}[1]{\textcolor{low}{#1}}
+\newcommand{\high}[1]{\textcolor{DarkOrange}{#1}}
 
 \lstset{
   basicstyle=\small\ttfamily,
@@ -53,6 +54,12 @@
   aboveskip=20pt,
   % literate={<-}{\texttt{<-}}{1},
   escapeinside={(*@}{@*)}
+}
+
+\lstset{
+  emph={combn,test,rlm,oneway\_test,oneway,melt},
+  emphstyle=\bfseries,
+  deletekeywords={replace,labels,variable}
 }
 
 \newcommand{\goto}[1]{\quad\hyperlink{#1}{\beamerbutton{Détails}}}

@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
 
 ##
-## Time-stamp: <2018-03-16 15:29:23 chl>
+## Time-stamp: <2018-03-17 08:57:55 chl>
 ## Figures that go along ssample.md slides.
 ##
 
@@ -92,7 +92,50 @@ p = ggplot(data = d, aes(x = level, y = weight)) +
 
 psave("fig-ratweight.png", w = 3, h = 4.5)
 
+
 ## Fig #5
+s0 = mean(tmp[,1]) - mean(tmp[,2])
+x = c(tmp[,1], tmp[,2])
+idx = combn(seq(along = 1:20), 10)
+f = function(k) mean(x[k]) - mean(x[-k])
+s = apply(idx, 2, f)
+pobs = sum(abs(s) >= abs(s0)) / length(s)
+
+dens = density(s, adjust = 0.5)
+dd = data.frame(x = dens$x, y = dens$y)
+
+p = ggplot(data = dd, aes(x, y)) +
+  geom_area(fill = grey(0.5), alpha = 0.5) +
+  geom_area(data = subset(dd, x >= -s0), aes(x, y), fill = clr6[1]) +
+  geom_area(data = subset(dd, x <= s0), aes(x, y), fill = clr6[1]) +
+  annotate(geom = "text", x = 22.5, y = 0.005, label = round(pobs/2, 4), size = 2.8, col = clr6[1]) +
+  annotate(geom = "text", x = -22.5, y = 0.005, label = round(pobs/2, 4), size = 2.8, col = clr6[1]) +
+  labs(x = "Value of s*", y = "Density")
+
+psave("fig-permutation.png")
+
+## Fig #6
+library(boot)
+s = function(x, d) mean(x[d])
+b = boot(tmp[,1], s, 1000)
+bci = boot.ci(b, type = "perc")$percent[4:5]
+tci = mean(tmp[[1]]) + c(-1,1) * qt(0.975, 9) * sd(tmp[[1]])/sqrt(10)
+nci = mean(tmp[[1]]) + c(-1,1) * qnorm(0.975) * sd(tmp[[1]])/sqrt(10)
+
+p = ggplot(data = NULL, aes(x = b$t)) +
+  geom_line(stat = "density") +
+  geom_vline(xintercept = b$t0, col = clr6[1]) +
+  geom_vline(xintercept = bci, linetype = 2, col = clr6[1]) +
+  geom_segment(aes(x = tci, xend = tci, y = 0.0875, yend = 0.0872), size = 1,
+               arrow = arrow(length = unit(0.25, "cm")), col = clr6[2]) +
+  geom_segment(aes(x = nci, xend = nci, y = 0.0875, yend = 0.0872), size = 1,
+               arrow = arrow(length = unit(0.25, "cm")), col = clr6[4]) +
+  labs(x = "Value of t*", y = "Density")
+
+psave("fig-bootstrap.png")
+
+
+## Fig #7
 phosphate = read.csv("../data/phosphate.csv")
 d = subset(phosphate, group == "obese")
 
@@ -104,7 +147,7 @@ p = ggplot(data = phosphate, aes(x = t0, y = t5)) +
 
 psave("fig-phosphate-1.png", w = 3, h = 4.5)
 
-## Fig #7
+## Fig #8
 m = lm(t5 ~ t0, data = d)
 yhat = fitted(m)
 
@@ -119,20 +162,20 @@ p = ggplot(data = d, aes(x = t0, y = t5)) +
 psave("fig-phosphate-2.png")
 
 
-## Fig #7
+## Fig #9
 p = ggplot(data = d, aes(x = t0, y = t5)) +
   geom_point(col = grey(.5)) +
   geom_smooth(method = "lm", se = FALSE, col = clr6[1]) +
-  geom_smooth(method = "rlm", se = FALSE, col = clr6[5]) +
+  geom_smooth(method = "rlm", se = FALSE, col = clr6[2]) +
   labs(x = "Baseline (T0)", y = "Baseline + 5 hours (T5)") +
-  annotate(geom = "text", x = 6.25, y = 4.375, label = "RLM", size = 2.8, col = clr6[5]) +
+  annotate(geom = "text", x = 6.25, y = 4.375, label = "RLM", size = 2.8, col = clr6[2]) +
   annotate(geom = "text", x = 5.75, y = 4.625, label = "LM", size = 2.8, col = clr6[1])
 
 psave("fig-phosphate-3.png")
 
 
 
-## Fig #8
+## Fig #10
 fat = data.frame(fecfat = c(44.5, 33, 19.1, 9.4, 71.3, 51.2,
                             7.3, 21, 5, 4.6, 23.3, 38,
                             3.4, 23.1, 11.8, 4.6, 25.6, 36,
