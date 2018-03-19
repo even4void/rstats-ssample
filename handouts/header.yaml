@@ -14,7 +14,8 @@ citecolor: DarkSlateGrey
 urlcolor:  SlateGrey
 linkcolor: SlateGrey
 link-citations: true
+bibliography: /Users/chl/Documents/Papers/references.bib
+csl: apa-fr-provost.csl
 header-includes:
-    - \graphicspath{{../assets/}}
     - \input{macros}
 ---
