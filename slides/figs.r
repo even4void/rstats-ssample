@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
 
 ##
-## Time-stamp: <2018-03-17 08:57:55 chl>
+## Time-stamp: <2018-03-19 08:52:02 chl>
 ## Figures that go along ssample.md slides.
 ##
 
@@ -189,6 +189,21 @@ p = ggplot(data = fat, aes(x = reorder(pilltype, fecfat), y = fecfat)) +
   geom_line(aes(group = subject), color = grey(0.5)) +
   geom_line(data = fat.mean, aes(x = pilltype, y = fecfat, group = 1),
             color = clr6[1], size = 1.2) +
-  labs(x = NULL, y = "Fecal fat")
+  labs(x = NULL, y = "Fecal Fat")
 
 psave("fig-pill.png")
+
+## FIg #11
+library(nlme)
+m = lme(fecfat ~ pilltype, data = fat, random = ~ 1 | subject)
+yhat = predict(m)
+
+p = ggplot(data = fat, aes(x = reorder(pilltype, fecfat), y = yhat)) +
+  geom_line(aes(group = subject), color = grey(0.5)) +
+  geom_line(data = fat.mean, aes(x = pilltype, y = fecfat, group = 1),
+            color = clr6[1], size = 1.2) +
+  labs(x = NULL, y = "Predicted Fecal Fat")
+
+psave("fig-pill-2.png")
+
+

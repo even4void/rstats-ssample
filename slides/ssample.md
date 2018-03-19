@@ -338,27 +338,46 @@ Un modèle de régression, en considérant des variables indicatrices codant les
 $$ y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + \varepsilon_i, $$
 où $\beta_0$ représente l'intercept et $\beta_1$ et $\beta_2$ les coefficients de régression associés à chaque facteur.
 
-## Modèle =  données + erreur
+## Données =  modèle + erreur
 
 ![](linmod.png)
+
+- Part systématique (fonctionelle, structurelle) du modèle, $\mathbb{E}(y\mid x)=f(x;\beta)$ : choix de l'estimateur, linéarité de la relation (e.g., restricted cubic spline), régularisation ou shrinkage, effet bloc, ajustement
+- Part aléatoire ou "bruit" : variance des erreurs, corrélation sérielle
+
 
 ## `<R/>`
 
 ```{.r .number-lines}
 tmp <- read.table("weight.dat")
 d <- data.frame(weight = as.numeric(unlist(tmp)),
-               type = gl(2, 20, labels = c("Beef", "Cereal")),
-               level = gl(2, 10, labels = c("Low", "High")))
+                type = gl(2, 20, labels = c("Beef", "Cereal")),
+                level = gl(2, 10, labels = c("Low", "High")))
 fm <- weight ~ type + level + type:level
 summary(aov(fm, data = d))
 ```
 
+```{caption="Tableau d'analyse de variance"}
+            Df Sum Sq Mean Sq F value Pr(>F)
+type         1    221   220.9   0.988 0.3269
+level        1   1300  1299.6   5.812 0.0211 *
+type:level   1    884   883.6   3.952 0.0545 .
+Residuals   36   8049   223.6
+```
 
 ## `<R/>`
 
 ```{.r .number-lines}
 m <- lm(fm, data = d)
 summary(m)
+```
+
+```{caption="Tableau des coefficients de régression"}
+                     Estimate Std. Error t value Pr(>|t|)
+(Intercept)            79.200      4.729  16.749  < 2e-16 ***
+typeCereal              4.700      6.687   0.703  0.48668
+levelHigh              20.800      6.687   3.110  0.00364 **
+typeCereal:levelHigh  -18.800      9.457  -1.988  0.05447 .
 ```
 
 ## Analyse de covariance
@@ -381,10 +400,23 @@ Notons que l'on fait l'hypothèse que $\beta$ est le même dans chaque groupe. C
 
 La réponse moyenne ajustée pour l'effet du co-facteur numérique s'obtient simplement comme $\bar\alpha_i+\hat\beta(\bar x_i-\bar x)$, où $\bar x_i$ est la moyenne des $x$ dans le $i$ème groupe.
 
+## Cas des mesures corrélées
 
-## Cas des mesures répétées
+Les données corrélées ou hiérarchiques s'observent dans le cas du regroupement d'unités plus ou moins similaires (souris d'une même lignée, effet cage), de corrélation intra unité (mesures répétées répétées dans le temp ou un mélange des deux [@mccullagh-2001-gener-linear; @gelman-2006-data-analy].
 
-TODO
+Deux approches : modèles marginaux, où l'on modélise des effets moyens de population en faisant l'hypothèse d'une matrice de corrélation intra unité dite "de travail", *versus* modèles conditionnels, où l'on modélise des effets individuels (cas des modèles à effets mixtes). Cette dernière approche est généralement plus souple que l'approche par ANOVA à mesures répétées (ou la MANOVA) en cas de valeurs manquantes ou pour rendre compte de structure de corrélation intra unité particulière.
+
+## Appariement et puissance statistique
+
+```r
+t.test(extra ~ group, data = sleep)
+t.test(extra ~ group, data = sleep, paired = TRUE)
+```
+
+Ignorer la structure de corrélation résulte généralement en des tests moins puissants car on sait que :
+$$ \text{Var}(X_1-X_2)=\text{Var}(X_1)+\text{Var}(X_2)-2\text{Cov}(X_1,X_2), $$
+ou de manière équivalente, $\text{Cov}(X_1,X_2)=\rho\sqrt{\text{Var}(X_1)}\sqrt{\text{Var}(X_2)}$. Si on assume $\text{Cov}(X_1,X_2)=0$, cela revient à sur-estimer la variance des différences de moyenne puisque $\text{Cov}(X_1,X_2)$ est généralement $>0$.
+
 
 ## Application numérique
 
@@ -449,17 +481,41 @@ Comme $\mu$ et $\text{pilltype}$ sont fixés, et $\varepsilon_{ij} \perp \text{s
 Les composantes de variance découlent de l'égalité $\text{Var}(y_{ij})=\text{Var}(\text{subject}_i)+\text{Var}(\varepsilon_{ij})=\sigma_{s}^2+\sigma_{\varepsilon}^2$, supposée valide pour toutes les observations. On a donc : $\text{Cor}(y_{ij},y_{ik})=\frac{\sigma_{s}^2}{\sigma_{s}^2+\sigma_{\varepsilon}^2}$, qui représente la proportion de variance attribuable aux sujets, et qu'on appelle également \texthigh{corrélation intraclasse} ($\rho$).
 
 
-## Approche par modèle mixte
+## Illustration : estimation de $\rho$
 
-Les modèles mixtes offrent une approche plus flexible
+```{.r .number-lines}
+library(nlme)
+m <- lme(fecfat ~ pilltype, data = fat, 
+         random = ~ 1 | subject)                ## random-intercept
+anova(lme.fit)                                  ## ANOVA table
+intervals(lme.fit)                              ## 95% CIs
+sigma.s <- as.numeric(VarCorr(lme.fit)[1,2])    ## sigma_s
+sigma.eps <- as.numeric(VarCorr(lme.fit)[2,2])  ## sigma_e
+sigma.s^2 / (sigma.s^2 + sigma.eps^2)           ## rho = 0.7025
+```
 
+L'estimation des paramètres du modèle est réalisée par la méthode REML : les effets aléatoires sont estimés après avoir rendu compte des effets fixes (`pilltype`). 
+
+## Modèle à intercept aléatoire et ANOVA à mesures répétées
+
+![Prédictions du modèle à intercept aléatoire (symétrie composée)](fig-pill-2.png)
+
+## Pour aller plus loin
+
+:::::::::::::: {.columns}
+::: {.column width="50%"}
+![](wilcox.jpg){ width=80% }
+:::
+::: {.column width="50%"}
+![](heritier.jpg){ width=80% }
+:::
+::::::::::::::
 
 
 ## Références {.allowframebreaks}
-\vskip1em
 \setlength{\parindent}{-0.16in}
 \setlength{\leftskip}{0.2in}
-\setlength{\parskip}{4pt}
+\setlength{\parskip}{2pt}
 \noindent
 \small\sffamily
 
