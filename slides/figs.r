@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
 
 ##
-## Time-stamp: <2018-03-21 17:58:00 chl>
+## Time-stamp: <2018-03-21 19:33:03 chl>
 ## Figures that go along ssample.md slides.
 ##
 
@@ -243,3 +243,38 @@ p = ggplot(data = ToothGrowth, aes(x = dose, y = len, color = supp)) +
   labs(x = "Dose (mg/day)", y = "Length (oc. unit)")
 
 psave("fig-toothgrowth.png")
+
+
+## Fig #3
+
+raw = textConnection("
+01 FS 270 310
+02 SF 370 385
+03 SF 310 400
+04 FS 260 310
+05 SF 380 410
+06 FS 300 370
+07 FS 390 410
+09 SF 290 320
+10 FS 210 250
+11 FS 350 380
+12 SF 260 340
+13 SF  90 220
+14 FS 365 330")
+d = scan(raw, what = "character")
+rm(raw)
+d = as.data.frame(matrix(d, ncol = 4, byrow = TRUE))
+names(d) = c("patient", "sequence", "salbutamol", "formoterol")
+d$salbutamol = as.numeric(d$salbutamol)
+d$formoterol = as.numeric(d$formoterol)
+
+d = reshape2::melt(d, measure.vars = 3:4)
+
+p = ggplot(data = d, aes(x = variable, y = value)) +
+  geom_line(aes(group = patient), color = grey(0.5)) +
+  geom_smooth(aes(x = as.numeric(variable), y = value),
+              method = "lm", se = FALSE, col = clr6[1]) +
+  facet_wrap(~ sequence, ncol = 2) +
+  labs(x = NULL, y = "PEF (L/min)")
+
+psave("fig-salbutamol.png", w = 5)

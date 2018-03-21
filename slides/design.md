@@ -376,12 +376,13 @@ update(mod1, . ~ . -a:b:c)   ## suppression de l'interaction ABC
 ```
 
 ## Illustration
+\vskip2em
 
-> The response is the length of odontoblasts (teeth) in each of 10 guinea pigs at each of three dose levels of Vitamin C (0.5, 1, and 2 mg) with each of two delivery methods (orange juice or ascorbic acid).
+> The response is the length of odontoblasts in 10 guinea pigs at three dose levels of Vitamin C with two delivery methods (orange juice or ascorbic acid).
 > 
 > --- @bliss-1952-statis-bioas
 
-![](fig-toothgrowth.png){ width=70% }
+![](fig-toothgrowth.png)
 
 ## `<R/>`
 
@@ -406,19 +407,71 @@ Residuals   54  712.1    13.2
 ## Commentaires
 
 1. Les tests précédents n'indiquent pas quelles paires de moyennes diffèrent significativement, mais permettent de se prononcer sur l'existence d'un effet et le rejet de l'hypothèse nulle associée. Pour préciser quels sont les traitements qui diffèrent deux à deux, il faudrait utiliser des procédures (post-hoc) de comparaisons multiples.
-2. Le facteur `dose` est traité comme une variable qualitative non ordonnée ; un test de linéarité de la relation `len ~ dose` serait toutefois intéressant. Sous R, on peut réaliser un tel test par régression ou en utilisant des contrastes polynomiaux.
-3. Pour tester formellement l'hypothèse d'égalité des variances, il faut travailler au niveau de tous les traitements : `bartlett.test(len ~ interaction(supp, dose), data = ToothGrowth)`. 
+
+2. Le facteur `dose` est traité comme une variable qualitative non ordonnée. Un test de linéarité de la relation `len ~ dose` serait toutefois intéressant. Sous R, on peut réaliser un tel test par régression ou en utilisant des contrastes polynomiaux.
+
+3. Pour tester formellement l'hypothèse d'égalité des variances, il faut travailler au niveau de tous les traitements : 
+
+```r
+bartlett.test(len ~ interaction(supp, dose), data = ToothGrowth)
+```
 
 
-## Comparaisons multiples
+## Comparaisons multiples planifiées ou non
+
+1. Méthode des contrastes  
+Avec $k$ échantillons, on peut définir $k-1$ contrastes orthogonaux
+$$ \phi = \sum_{i=1}^kc_i\overline{x}_i,\quad \sum_ic_i=0\; \text{et}\; \phi_u^t\phi_v^{\phantom{t}}=0 $$
+et utiliser comme statistique de test, $\frac{\phi}{s_{\phi}}$, où $s_{\phi}^2=s^2\sum_i\frac{c_i^2}{n_i}\sim t(\nu)$.
+
+2. Tests post-hoc  
+On a un ensemble de $k(k-1)/2$ paires de moyennes. Pour $k=4$, en fixant $\alpha=0.05$, le risque d'ensemble ou FWER (en supposant les tests indépendants) devient $1-(1-0.05)^6=0.265$, soit 27 % de chance de déclarer à tort un résultat significatif.  
+Deux stratégies, généralement conservatrices : modifier la statistique de test (Tukey HSD) ou modifier le risque de première espèce (Bonferroni) [@christensen-2002-plane-answer]. Autres approches : méthode adaptative (Holm), contrôle du FDR, permutations, etc. [@dudoit-2008-multip-testin].
+
+## Cas des protocoles déséquilibrés
+
+Lorsque les effectifs ne sont pas tous égaux entre les traitements, les choses se compliquent, notamment au niveau du calcul séquentiel des sommes de carrés [@herr-1986-histor-anova].
+
+Cas d'un plan à deux facteurs, A et B :
+
+- Type I (défaut): SS($A$), SS($B|A$), puis SS($AB|B$, $A$)
+- Type II: SS($A|B$), puis SS($B|A$) (pas d'interaction)
+- Type III: SS($A|B$, $AB$), SS($B|A$, $AB$) (interpréter chaque effet principal après avoir pris en compte les autres effets principaux et l'interaction) 
+
 
 ## Méthode d'ajustement *a posteriori*
 
+Applicable également dans le cas des plans de type avant/après, l'analyse de covariance fournit le meilleur estimateur pour la différence différence entre deux groupes de sujets, en comparaison de la simple analyse des scores de différence ou d'une approche par modèle mixte [@senn-2006-chang-from].
 
-# Cas pratique 1 : essai croisé
+### Modèle d'ANCOVA
+
+Soit $y_{ij}$ la $j$ème observation dans le groupe $i$. À l'image du modèle d'ANOVA à un facteur, le modèle d'ANCOVA s'écrit :
+$$ y_{ij} = \mu+\alpha_i+\beta(x_{ij}-\bar x)+\varepsilon_{ij},$$ 
+où $\beta$ est le coefficient de régression liant la réponse $y$ et le cofacteur $x$ (continu), avec $\bar x$ la moyenne générale des $x_{ij}$, et toujours un terme d'erreur $\varepsilon_{ij}\sim \mathcal{N}(0,\sigma^2)$.
+
+Notons que l'on fait l'hypothèse que $\beta$ est le même dans chaque groupe. Cette hypothèse de parallélisme peut se vérifier en testant la significativité du terme d'interaction $\alpha\beta$.
+
+La réponse moyenne ajustée pour l'effet du co-facteur numérique s'obtient simplement comme $\bar\alpha_i+\hat\beta(\bar x_i-\bar x)$, où $\bar x_i$ est la moyenne des $x$ dans le $i$ème groupe.
 
 
-# Cas pratique 2 : détermination d'une DE50
+# Étude de cas : essai croisé
+
+## Utilisation d'un modèle à effet aléatoire
+\vskip2em
+
+> Two-period AB-BA randomised crossover trial in which patients are treated with two bronchodilators, salbutamol (S) and formoterol (F). The outcome is the peak expiratory flow (PEF). Patients received F-S or S-F. 
+>
+> --- @senn-1993-cross-trial
+
+![](fig-salbutamol.png)
+
+## `<R/>`
+
+```{.r .number-lines}
+library(nlme)
+m <- lme(value ~ variable * period, data = d, random = ~ 1 | patient)
+```
+
 
 
 
