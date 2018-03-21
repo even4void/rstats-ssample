@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
 
 ##
-## Time-stamp: <2018-03-19 21:23:50 chl>
+## Time-stamp: <2018-03-21 17:58:00 chl>
 ## Figures that go along ssample.md slides.
 ##
 
@@ -207,3 +207,39 @@ p = ggplot(data = fat, aes(x = reorder(pilltype, fecfat), y = yhat)) +
 psave("fig-pill-2.png")
 
 
+################################################################################
+
+##
+## Figures that go along design.md slides.
+##
+
+## Fig #1
+
+sleep$group = factor(sleep$group, labels = c("DHH", "LHH"))
+sleep$ID = factor(sleep$ID)
+
+sleep.mean = aggregate(extra ~ group, data = sleep, mean)
+
+p = ggplot(data = sleep, aes(x = group, y = extra)) +
+  geom_line(aes(group = ID), col = grey(0.5)) +
+  geom_line(data = sleep.mean, aes(x = group, y = extra, group = 1),
+            color = clr6[1], size = 1.2) +
+  geom_hline(yintercept = 0, linetype = 2) +
+  labs(x = NULL, y = "Extra sleep (hours)")
+
+psave("fig-student.png")
+
+
+## Fig #2
+
+tooth.mean = aggregate(len ~ dose + supp, data = ToothGrowth, mean)
+
+p = ggplot(data = ToothGrowth, aes(x = dose, y = len, color = supp)) +
+  geom_point(position = position_jitterdodge(jitter.width = .1, dodge.width = 0.25)) +
+  geom_line(data = tooth.mean, aes(x = dose, y = len, color = supp)) +
+  scale_color_manual(values = clr6[c(4,6)]) +
+  guides(color = FALSE) +
+  geom_dl(aes(label = supp), method = list("smart.grid", cex = .8)) +
+  labs(x = "Dose (mg/day)", y = "Length (oc. unit)")
+
+psave("fig-toothgrowth.png")

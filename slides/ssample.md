@@ -24,7 +24,7 @@ Lorsque les conditions d'application sont vérifiées, le test de Student reste 
 
 > Statisticians are applied philosophers. Philosophers argue how many angels can dance on the head of a needle; statisticians count them. Or rather, count how many can probably dance. (...) We can predict nothing with certainty but we can predict how uncertain our predictions will be, on average that is. Statistics is the science that tells us how.
 >
-> -- Stephen Senn (2003)
+> --- Stephen Senn (2003)
 
 ## Cadre de raisonnement
 
