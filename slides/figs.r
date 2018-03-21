@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
 
 ##
-## Time-stamp: <2018-03-19 08:52:02 chl>
+## Time-stamp: <2018-03-19 21:23:50 chl>
 ## Figures that go along ssample.md slides.
 ##
 
@@ -191,7 +191,7 @@ p = ggplot(data = fat, aes(x = reorder(pilltype, fecfat), y = fecfat)) +
             color = clr6[1], size = 1.2) +
   labs(x = NULL, y = "Fecal Fat")
 
-psave("fig-pill.png")
+psave("fig-pill-1.png")
 
 ## FIg #11
 library(nlme)

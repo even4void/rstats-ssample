@@ -1,3 +1,0 @@
-- Add missing R dependencies (binomcipv, acbinomcipv, binomLCO) in `signt.r`
-- Add Yuen test to ssample.md
-- Add ANCOVA example to ssample.md

@@ -139,6 +139,18 @@ $$ \nu = \high{-2} + \frac{ \left( s_1^2/n_1 + s_2^2/n_2 \right)^2 }
 
 [^2]: [Problème de Behrens-Fisher](https://en.wikipedia.org/wiki/Behrens–Fisher_problem).
 
+## Cas des moyennes tronquées
+
+Méthode proposée par @yuen-1974-two-sampl : utilisation d'une statistique $t$ basée sur des moyennes tronquées (typiquement, 20 %), qui se réduit à la statistique de Welch en l'absence de trimming.
+
+### Le test de Yuen
+
+La statistique de test se construit comme dans le cas du test de Student, $t_{\text{obs}} = \frac{\bar x_1 - \bar x_2}{\sqrt{d_1 + d_2}}$, avec
+$$ d_j = \frac{(n_j - 1)s_{wj}^2}{h_j(h_j-1)}. $$
+
+Ici, $h_j$ représente le nombre d'observations dans chaque groupe après trimming, et $s_{wj}^2$ la variance winsorisée du groupe $j$. Les degrés de liberté associés à cette statistique $t_{\text{obs}}$ sont $\tfrac{(d_1+d_2)^2}{\frac{d_1^2}{h_1-1}+\frac{d_2^2}{h_2-1}}$. 
+
+
 ## Alternatives
 
 1. Approche non paramétrique 
@@ -434,9 +446,9 @@ ou de manière équivalente, $\text{Cov}(X_1,X_2)=\rho\sqrt{\text{Var}(X_1)}\sqr
 | 6  | 51.2 | 38.0   |   36.0  |  52.6  | 44.5 |
 |Avg.| 38.1 | 16.5   |   17.4  |  31.1  | 25.8 |
 
-## 
+## {#fig-pill-1}
 
-![](fig-pill.png)
+![](fig-pill-1.png)
 
 ## Modèles d'ANOVA
 
@@ -496,9 +508,9 @@ sigma.s^2 / (sigma.s^2 + sigma.eps^2)           ## rho = 0.7025
 
 L'estimation des paramètres du modèle est réalisée par la méthode REML : les effets aléatoires sont estimés après avoir rendu compte des effets fixes (`pilltype`). 
 
-## Modèle à intercept aléatoire et ANOVA à mesures répétées
+## Modèle à intercept aléatoire et shrinkage
 
-![Prédictions du modèle à intercept aléatoire (symétrie composée)](fig-pill-2.png)
+![Prédictions du modèle à intercept aléatoire (symétrie composée) \goto{fig-pill-1}{Up}](fig-pill-2.png)
 
 ## Pour aller plus loin
 

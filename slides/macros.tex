@@ -1,5 +1,5 @@
 %% LaTeX header file (without altering default Pandoc template)
-%% Time-stamp: <2018-03-19 09:38:32 chl>
+%% Time-stamp: <2018-03-19 21:52:45 chl>
 
 \usecolortheme[named=black]{structure}
 \usepackage[font={color=DarkSlateGrey,small}]{caption}
@@ -62,7 +62,7 @@
   deletekeywords={replace,labels,variable}
 }
 
-\newcommand{\goto}[1]{\quad\hyperlink{#1}{\beamerbutton{Détails}}}
+\newcommand{\goto}[2]{\quad\hyperlink{#1}{\beamerbutton{#2}}}
 \renewcommand{\footnoterule}{%
   \kern -3pt
   {\color{LightSlateGrey}\hrule width \textwidth height .25pt}
