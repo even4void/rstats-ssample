@@ -1,7 +1,7 @@
 ---
 title:    Plans d'expérience
 subtitle: Applications en recherche pré-clinique
-author:   
+author:   Sylvain Charron
 institute: |
            | RITME Academy
            | 72, rue des Archives – 75003 Paris 
@@ -370,9 +370,9 @@ R suit les conventions de notation proposées par Wilkinson & Rogers pour les pl
 | a / b | équivalent à 1 + a + b  + a %in% b (emboîtement) |
 
 ```r
-fm <- y ~ a * b * c          ## modèle de base (A, B, C, AB, AC, BC, ABC)
-m1 <- aov(fm, data = d)      ## estimation des paramètres du modèle
-update(mod1, . ~ . -a:b:c)   ## suppression de l'interaction ABC
+fm <- y ~ a * b * c          ## (A, B, C, AB, AC, BC, ABC)
+m1 <- aov(fm, data = d)      ## estimation
+update(mod1, . ~ . -a:b:c)   ## remove interaction ABC
 ```
 
 ## Illustration
@@ -463,18 +463,80 @@ La réponse moyenne ajustée pour l'effet du co-facteur numérique s'obtient sim
 >
 > --- @senn-1993-cross-trial
 
-![](fig-salbutamol.png)
+:::::::::::::: {.columns}
+::: {.column width="50%"}
+\small
+|  ID | seq |   S |   F |
+|-----|-----|-----|-----|
+|  01 | FS  | 270 | 310 |
+|  02 | SF  | 370 | 385 |
+|  03 | SF  | 310 | 400 |
+|  04 | FS  | 260 | 310 |
+|  05 | SF  | 380 | 410 |
+|  06 | FS  | 300 | 370 |
+|  07 | FS  | 390 | 410 |
+|  09 | SF  | 290 | 320 |
+|  10 | FS  | 210 | 250 |
+| ... |     |     |     |
+:::
+::: {.column width="50%"}
+![](fig-salbutamol-1.png){ width=80% }
+:::
+::::::::::::::
 
 ## `<R/>`
 
 ```{.r .number-lines}
 library(nlme)
-m <- lme(value ~ variable * period, data = d, random = ~ 1 | patient)
+d <- read.csv("peakflow.csv")
+m <- lme(value ~ treatment + period + sequence, data = d, 
+         random = ~ 1 | patient)
+summary(m)
 ```
 
+Utilisation de sommes de carré de type III :
+
+```{.r .number-lines}
+library(lme4)
+library(lmerTest)
+m <- lmer(value ~ treatment + period + sequence + (1 | patient), 
+          data = d)
+anova(m)
+```
+
+## `<R/>`
+
+```{caption="Modèle d'ANOVA"}
+Analysis of Variance Table of type III  with  Satterthwaite
+approximation for degrees of freedom
+           Sum Sq Mean Sq NumDF DenDF F.value   Pr(>F)
+treatment 14035.9 14035.9     1    11 18.7044 0.001205 **
+period     1632.1  1632.1     1    11  2.1749 0.168314
+sequence     24.1    24.1     1    11  0.0321 0.861076
+```
+
+On obtiendrait les mêmes résultats pour l'effet séquence en utilisant la formule suivante :
+
+```{.r .number-lines}
+m <- lmer(value ~ treatment * period + (1 | patient), data = d)
+anova(m)
+```
+
+## Effet séquence = effet d'interaction
+
+![](fig-salbutamol-2.png)
 
 
+## Paramétrisation
 
+Termes ou effets à considérer : traitement (critère de jugement, $\alpha_S - \alpha_F$), période ($\pi_2 - \pi_1$), carry-over ($\lambda_F - \lambda_S$---en principe, on peut supposer qu'il n'y en a pas car les mesures sont réalisées 8h après traitement), individuel, résiduelle.
+
+|    | Période 1                | Période 2                            |
+|----|--------------------------|--------------------------------------|
+| FS | $\mu + \pi_1 + \alpha_F$ | $\mu + \pi_2 + \alpha_S + \lambda_F$ |
+| SF | $\mu + \pi_1 + \alpha_S$ | $\mu + \pi_2 + \alpha_F + \lambda_S$ |
+
+Les facteurs sujet et période sont considérés comme des blocs et on a un RCB dans chacun des deux cas. Pour l'effet séquence (SF ou FS), il s'agit d'un plan en blocs incomplets. Le problème avec le dessin AB/BA est que l'**effet traitement est contaminé par l'effet carry-over** ($\mathbb E(\alpha_S - \alpha_F) = \alpha_S - \alpha_F + 0.5(\lambda_F - \lambda_S)$).
 
 ## Pour aller plus loin
 

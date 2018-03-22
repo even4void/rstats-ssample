@@ -1,3 +1,4 @@
 ** TODO Add missing R dependencies (binomcipv, acbinomcipv, binomLCO) in `signt.r`, (winvar)
 ** TODO Add Yuen test to ssample.md
 ** TODO Add ANCOVA example to ssample.md
+** TODO Add SRS, cluster and stratified sampling (design.md)

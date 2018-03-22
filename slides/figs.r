@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
 
 ##
-## Time-stamp: <2018-03-21 19:33:03 chl>
+## Time-stamp: <2018-03-22 10:03:48 chl>
 ## Figures that go along ssample.md slides.
 ##
 
@@ -265,16 +265,32 @@ d = scan(raw, what = "character")
 rm(raw)
 d = as.data.frame(matrix(d, ncol = 4, byrow = TRUE))
 names(d) = c("patient", "sequence", "salbutamol", "formoterol")
-d$salbutamol = as.numeric(d$salbutamol)
-d$formoterol = as.numeric(d$formoterol)
+d$salbutamol = as.numeric(as.character(d$salbutamol))
+d$formoterol = as.numeric(as.character(d$formoterol))
 
 d = reshape2::melt(d, measure.vars = 3:4)
+d$period = factor(ifelse(as.numeric(d$sequence) == 1 & d$variable == "formoterol" |
+                         as.numeric(d$sequence) == 2 & d$variable == "salbutamol",
+                         1, 2))
+
 
 p = ggplot(data = d, aes(x = variable, y = value)) +
   geom_line(aes(group = patient), color = grey(0.5)) +
   geom_smooth(aes(x = as.numeric(variable), y = value),
               method = "lm", se = FALSE, col = clr6[1]) +
-  facet_wrap(~ sequence, ncol = 2) +
+  facet_wrap(~ sequence, nrow = 2) +
   labs(x = NULL, y = "PEF (L/min)")
 
-psave("fig-salbutamol.png", w = 5)
+psave("fig-salbutamol-1.png", w = 3, h = 4.5)
+
+
+p2 = ggplot(data = d, aes(x = period, y = value)) +
+  geom_line(aes(group = patient), color = grey(0.5)) +
+  geom_smooth(aes(x = as.numeric(period), y = value),
+              method = "lm", se = FALSE, col = clr6[1]) +
+  facet_wrap(~ sequence, nrow = 2) +
+  labs(x = NULL, y = "PEF (L/min)")
+
+png("fig-salbutamol-2.png", height = 4, width = 8, res = 300, units = "in")
+grid.arrange(p, p2, ncol = 2)
+dev.off()
