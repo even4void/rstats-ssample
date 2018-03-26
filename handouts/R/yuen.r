@@ -14,10 +14,6 @@ yuen <- function(x, y = NULL, tr = .2, alpha = .05) {
   ##
   ##  The function returns both a confidence interval and a p-value.
   ##
-  ##  For an omnibus test with more than two independent groups,
-  ##  use t1way.
-  ##  This function uses winvar from chapter 2.
-  ##
   if (is.null(y)) {
     if (is.matrix(x) || is.data.frame(x)) {
       y <- x[,2]
@@ -30,6 +26,27 @@ yuen <- function(x, y = NULL, tr = .2, alpha = .05) {
   }
   if (tr == .5) stop("Using tr=.5 is not allowed; use a method designed for medians")
   if (tr > .25) print("Warning: with tr>.25 type I error control might be poor")
+
+  winvar <- function(x, tr = .2, na.rm = FALSE, STAND = NULL){
+    ##  Compute the gamma Winsorized variance for the data in the vector x.
+    remx <- x
+    x <- x[!is.na(x)]
+    y <- sort(x)
+    n <- length(x)
+    ibot <- floor(tr*n) + 1
+    itop <- length(x) - ibot + 1
+    xbot <- y[ibot]
+    xtop <- y[itop]
+    y <- ifelse(y <= xbot, xbot, y)
+    y <- ifelse(y >= xtop, xtop, y)
+    wv <- var(y)
+    if (!na.rm)
+      if (sum(is.na(remx) > 0))
+        wv <- NA
+    wv
+  }
+
+
   x <- x[!is.na(x)]  # Remove any missing values in x
   y <- y[!is.na(y)]  # Remove any missing values in y
   h1 <- length(x) - 2 * floor(tr * length(x))
