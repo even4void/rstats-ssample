@@ -1,11 +1,10 @@
 ---
 title:    Plans d'expérience
 subtitle: Applications en recherche pré-clinique
-author:   Sylvain Charron
+author:   Christophe Lalanne
 institute: |
-           | RITME Academy
-           | 72, rue des Archives – 75003 Paris 
-           | www.ritme.com 
+           | ch.lalanne@mac.com 
+           | www.aliquote.org 
 date:
 ---
 
